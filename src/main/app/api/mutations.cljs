@@ -6,11 +6,9 @@
 ;; Place your client mutations here
 (defmutation delete-person
   "Mutation: Delete the person with name from the list with list-name"
-  [{:keys [list-name name]}] ; (1)
-  (action [{:keys [state]}] ; (2)
-          (let [path     (if (= "Friends" list-name)
-                           [:friends :person-list/people]
-                           [:enemies :person-list/people])
-                old-list (get-in @state path)
-                new-list (vec (filter #(not= (:person/name %) name) old-list))]
-            (swap! state assoc-in path new-list))))
+  [{:keys [list-id person-id]}]
+  (action [{:keys [state]}]
+          (let [ident-to-remove [:person/by-id person-id]
+                strip-fk (fn [old-fks]
+                           (vec (filter #(not= ident-to-remove %) old-fks)))]
+            (swap! state update-in [:person-list/by-id list-id :person-list/people] strip-fk))))
