@@ -10,9 +10,13 @@
 
 ;; The main UI of your application
 
-(defsc Root [this {:keys [friends enemies]}]
-  {:initial-state (fn [params] {:friends (prim/get-initial-state ui.components/PersonList {:label "Friends"})
-                                :enemies (prim/get-initial-state ui.components/PersonList {:label "Enemies"})})}
+(defsc Root [this {:keys [ui/react-key friends enemies]}]
+  {:query {:friends (prim/get-query ui.components/PersonList)
+           :enemies (prim/get-query ui.components/PersonList)}
+   :initial-state (fn [params] {:friends (prim/get-initial-state ui.components/PersonList
+                                                                 {:id :friends :label "Friends"})
+                                :enemies (prim/get-initial-state ui.components/PersonList
+                                                                 {:id :enemies :label "Enemies"})})}
     (dom/div
      (ui.components/ui-person-list friends)
      (ui.components/ui-person-list enemies)))
